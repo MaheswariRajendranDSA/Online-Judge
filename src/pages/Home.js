@@ -19,7 +19,7 @@ const Home = () => {
     fetchProblems()
   }, [])
     return (
-      <div className="home">
+      <div className="homee">
         <div className="problems">
         {problems && problems.map((problem) => (
   <ProblemDetails problem={problem} key={problem._id} />
