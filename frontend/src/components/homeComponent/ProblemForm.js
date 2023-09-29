@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useAuthContext } from "../../hooks/useAuthContext";
+
 const ProblemForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('')
@@ -7,9 +9,16 @@ const ProblemForm = () => {
   const [languages, setLanguage] = useState('')
   const [difficulty, setDifficulty] = useState('')
   const [error, setError] = useState(null)
+  const { user } = useAuthContext()
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+
+    if(!user)
+    {
+      setError('you must be logged in')
+      return 
+    }
     const test_cases = {input, output}
     const problem = {title, description, languages, difficulty, test_cases}
 
@@ -17,7 +26,8 @@ const ProblemForm = () => {
       method:'POST',
       body: JSON.stringify(problem),
       headers:{
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${user.token}`
       }
     })
 

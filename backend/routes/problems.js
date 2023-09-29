@@ -1,5 +1,6 @@
 const express = require('express')
 const Problem = require('../models/ProblemModels')
+const requireAuth = require('../middleware/requireAuth')
 const {
   getProblems,
   getSingleProblemById,
@@ -8,6 +9,7 @@ const {
 } = require('../controllers/problemControllers')
 const router = express.Router()
 
+router.use(requireAuth)
 // GET all workouts
 router.get('/getProblems', getProblems)
 

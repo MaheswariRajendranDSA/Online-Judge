@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import React from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 function Spinner() {
   return (
@@ -11,6 +12,7 @@ function Spinner() {
   );
 }
 const Submit = (prob) => {
+  const { user }  = useAuthContext()
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -20,6 +22,10 @@ const Submit = (prob) => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!user)
+    {
+      return
+    }
     const payload = {
       language: "cpp",
       code,
@@ -28,8 +34,10 @@ const Submit = (prob) => {
     try {
       const { data } = await axios.post(
         "http://localhost:4000/api/problems/createProblemById/run",
-        payload
-      );
+        payload,{headers: {
+          Authorization: `Bearer ${user.token}`
+        }
+    });
       setOutput(data.output);
       setLoading(false);
     } catch (e) {
