@@ -1,14 +1,19 @@
 import {useEffect, useState} from "react"
 import ProblemDetails from "../components/homeComponent/ProblemDetails"
 import ProblemForm from "../components/homeComponent/ProblemForm"
+import { useAuthContext } from '../hooks/useAuthContext'
+
 
 const Home = () => {
 
   const[problems, setProblems] = useState(null)
+  const { user } = useAuthContext()
 
   useEffect(() => {
     const fetchProblems = async() => {
-      const response = await fetch("/api/problems/getProblems")
+      const response = await fetch("/api/problems/getProblems", {
+        headers: {'Authorization': `Bearer ${user.token}`},
+      })
       const json  = await response.json()
 
       if(response.ok)
@@ -17,7 +22,7 @@ const Home = () => {
       }
     }
     fetchProblems()
-  }, [])
+  }, [user])
     return (
       <div className="home">
         <div className="problems">

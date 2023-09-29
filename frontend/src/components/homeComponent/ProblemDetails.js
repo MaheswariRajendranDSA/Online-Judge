@@ -2,11 +2,10 @@ import {useNavigate} from 'react-router-dom'
 
 
 const ProblemDetails = ({ problem }) => {
-
     const navigate = useNavigate();
 
     const buttonHandler = () => {
-        navigate(`/problem/${problem._id}`);
+        navigate(`/problem/${problem._id}`)
     }
   return (
     <div className="problem-details">
