@@ -5,6 +5,7 @@ const ProblemDetails = (prob) => {
   const [haveSubmitClicked, SetSubmitAsClicked] = useState(false);
 
   const submitHandler = (action) => {
+    action.preventDefault();
     SetSubmitAsClicked(!haveSubmitClicked);
     console.log(SetSubmitAsClicked);
   };
@@ -12,7 +13,7 @@ const ProblemDetails = (prob) => {
   return (
     <div>
       {haveSubmitClicked && (
-        <Submit clicked={submitHandler} problem={problem} />
+        <Submit clickHandler={submitHandler} problem={problem} />
       )}
       {!haveSubmitClicked && (
         <div>

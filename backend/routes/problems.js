@@ -5,7 +5,9 @@ const {
   getProblems,
   getSingleProblemById,
   createProblemById,
-  createNewProblemById
+  createNewProblemById,
+  addTestCase,
+  submitProblem,
 } = require('../controllers/problemControllers')
 const router = express.Router()
 
@@ -22,6 +24,11 @@ router.post('/createProblemById/run', createProblemById);
 
 // POST a new workout
 router.post('/createNewProblemById/run', createNewProblemById);
+
+router.post('/addTestCase/:id', addTestCase);
+
+//submit a problem
+router.post('/submitproblem/:id', submitProblem);
 /*
 router.post('/', async (req, res) => {
     const {

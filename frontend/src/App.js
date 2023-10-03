@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import ProblemPage from './pages/ProblemPage'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import AddTestCase from './pages/AddTestCase';
 
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
             <Route 
               path="/"
               element={user?<Home /> : <Navigate to="/login"/>}/>
+              /*<Route path='/addTestCase/:number'
+              element={user?<AddTestCase />:<Navigate to="/login"/>}  />
               <Route path='/problem/:number'
               element={<ProblemPage />}  />
               <Route 
