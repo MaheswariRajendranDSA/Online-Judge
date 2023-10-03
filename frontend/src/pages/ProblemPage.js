@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import ProblemDetails from "../components/ProblemComponent/ProblemDetails"
+import  ProblemDetails  from "../components/ProblemComponent/ProblemDetails"
 import { useParams } from 'react-router-dom'
 import { useAuthContext } from "../hooks/useAuthContext";
 const ProblemPage = () => {
@@ -33,7 +33,6 @@ const ProblemPage = () => {
   }, [user]);
   return (
     <div className="problem">
-
         {problems && <ProblemDetails problem={problems}/>}
     </div>
   );

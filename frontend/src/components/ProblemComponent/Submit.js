@@ -1,30 +1,24 @@
 import axios from "axios";
-import { useState } from "react";
-import React from "react";
-import ClipLoader from "react-spinners/ClipLoader";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
-function Spinner() {
-  return (
-    <div style={{ width: "100px", margin: "auto", display: "block" }}>
-      <ClipLoader color="#52bfd9" size={100} />
-    </div>
-  );
-}
-const Submit = (prob) => {
-  const { user }  = useAuthContext()
+const Submit = (props) => {
+  const { user } = useAuthContext();
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { number } = useParams();
+
   function clearOutput() {
     setOutput("");
   }
-  const handleSubmit = async (e) => {
+
+  const compileHandler = async (e) => {
     e.preventDefault();
-    if(!user)
-    {
-      return
+    if (!user) {
+      return;
     }
     const payload = {
       language: "cpp",
@@ -34,16 +28,69 @@ const Submit = (prob) => {
     try {
       const { data } = await axios.post(
         "http://localhost:4000/api/problems/createProblemById/run",
-        payload,{headers: {
-          Authorization: `Bearer ${user.token}`
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         }
-    });
+      );
       setOutput(data.output);
       setLoading(false);
-    } catch (e) {
-      console.log(e.response);
-    }
+    } catch(error) {
+      if(error) {
+          console.log(error.message);
+          setOutput(error.message);
+      } else {
+          setOutput("Error: Server Down. Recheck the Server and try again!")
+      }
+  }
   };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      return;
+    }
+    const payload = {
+      language: "cpp",
+      code,
+      problemId: number,
+    };
+    try {
+      const response = await fetch(`/api/problems/submitproblem/${number}`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      const out = await response.json();
+
+      console.log(out);
+      if(out.status==="200")
+      {
+      setOutput('');
+      setOutput(out.message);
+      setLoading(false);
+      }
+      else
+      setOutput('Code execution failed and check the code');
+    }
+    catch (error) 
+    {
+      if(error){
+      setOutput("Error: Server Down. Recheck the Server and try again!")
+    }
+    }
+};
+
+const cancelHandler = async (e) => {
+e.preventDefault();
+props.clickHandler(e);
+
+}
   return (
     <div>
       <textarea
@@ -55,7 +102,9 @@ const Submit = (prob) => {
         }}
       ></textarea>
       <br />
-      <button onClick={handleSubmit}>Submit</button>
+      <button onClick={compileHandler}>Compile</button>
+      <button onClick={submitHandler}>Submit</button>
+      <button onClick={cancelHandler}>Cancel</button>
       <div className="right-container">
         <h4>Input:</h4>
         <div className="input-box">
@@ -66,12 +115,10 @@ const Submit = (prob) => {
         </div>
         <h4>Output:</h4>
         {loading ? (
-          <div className="spinner-box">
-            <img src={Spinner} alt="Loading..." />
-          </div>
+          <div className="spinner-box"></div>
         ) : (
           <div className="output-box">
-            <pre>{setOutput}</pre>
+            
             <button
               onClick={() => {
                 clearOutput();
@@ -88,4 +135,4 @@ const Submit = (prob) => {
   );
 };
 
-export default Submit;
+export default Submit
