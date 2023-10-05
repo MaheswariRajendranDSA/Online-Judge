@@ -9,6 +9,7 @@ const Submit = (props) => {
   const [output, setOutput] = useState("");
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage ] = useState("");
   const { number } = useParams();
 
   function clearOutput() {
@@ -21,7 +22,7 @@ const Submit = (props) => {
       return;
     }
     const payload = {
-      language: "cpp",
+      language,
       code,
       userInput,
     };
@@ -37,15 +38,17 @@ const Submit = (props) => {
       );
       setOutput(data.output);
       setLoading(false);
-    } catch(error) {
-      if(error) {
-          console.log(error.message);
-          setOutput(error.message);
-      } else {
-          setOutput("Error: Server Down. Recheck the Server and try again!")
       }
-  }
-  };
+      catch(error) {
+        if(error) {
+            console.log(error.message);
+            setOutput(error.message);
+        } else {
+            setOutput("Error: Server Down. Recheck the Server and try again!")
+        }
+    }
+    };
+  
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -53,7 +56,7 @@ const Submit = (props) => {
       return;
     }
     const payload = {
-      language: "cpp",
+      language,
       code,
       problemId: number,
     };
@@ -93,6 +96,22 @@ props.clickHandler(e);
 }
   return (
     <div>
+      <div>
+        <label>Language:</label>
+      <select value={language} onChange={(e)=> {
+        let shouldSwitch = window.confirm(
+    "Are you sure you want to change language? WARNING: Your current code will be lost.");
+          if (shouldSwitch) {
+            setLanguage(e.target.value);
+            setCode('');
+            }
+      console.log(e.target.value)}}>
+        <option value="c">C</option>
+        <option value="cpp">C++</option>
+        <option value="py">Python</option>
+      </select>
+      </div>
+      <br />
       <textarea
         rows="30"
         cols="100"

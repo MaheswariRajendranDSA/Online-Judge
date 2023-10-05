@@ -62,12 +62,6 @@ const ProblemForm = () => {
         onChange={(e) => setDescription(e.target.value)}
         value={description}
       />
-       <label>Language:</label>
-      <input
-        type="text"
-        onChange={(e) => setLanguage(e.target.value)}
-        value={languages}
-      />
       <label>Difficulty:</label>
       <input
         type="text"
