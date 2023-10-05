@@ -3,6 +3,8 @@ const solution = require("../models/submissionModel")
 const mongoose = require("mongoose");
 const { generateFile } = require("../generateFile");
 const { executeCpp } = require("../executeCpp");
+const { executeC } = require("../executeC")
+const { executePy } = require("../executePy")
 
 // get all workouts
 const getProblems = async (req, res) => {
@@ -36,13 +38,23 @@ const getSingleProblemById = async (req, res) => {
 };
 
 const createProblemById = async (req, res) => {
-  const { language = "cpp", code, userInput } = req.body;
+  const { language, code, userInput } = req.body;
   if (code === undefined) {
     return res.status(400).json({ success: false, error: "Empty code body!" });
   }
   const filepath = await generateFile(language, code);
   try {
-    const output = await executeCpp(filepath, userInput);
+
+    let output;
+      if(language === "c"){
+        output = await executeC(filepath, userInput);
+      }
+      else if(language === "cpp"){
+        output = await executeCpp(filepath, userInput);
+      }
+      else if(language === "py"){
+        output = await executePy(filepath, userInput);
+      }
     return res.json({ output });
   } catch (e) {
     console.log(e);
@@ -119,8 +131,8 @@ const createNewProblemById = async (req, res) => {
 
 
 const submitProblem = async (req, res) => {
-  const { language = "cpp", code, problemId } = req.body;
-
+  const { language, code, problemId } = req.body;
+  console.log(language);
   if (code === undefined) {
     return res.status(400).json({ success: false, error: "Empty code body!" });
   }
@@ -138,20 +150,34 @@ const submitProblem = async (req, res) => {
 
     for (const testCase of testCases) {
       const testCaseInput = testCase.input;
-      let codeOutput = await executeCpp(filepath, testCaseInput);
+      let codeOutput ;
+      if(language === "c"){
+      codeOutput = await executeC(filepath, testCaseInput);
+      }
+      else if(language === "cpp"){
+        codeOutput = await executeCpp(filepath, testCaseInput);
+      }
+      else if(language === "py"){
+        codeOutput = await executePy(filepath, testCaseInput);
+        codeOutput = codeOutput.replace(/\n$/, '');
+        //console.log(codeOutput);
+      }
+      //console.log(testCase.output)
       codeOutput = codeOutput.replace(/\n$/, '');
-      if (codeOutput === testCase.output) {
+      //codeOutput = codeOutput.replace(/[\r]/g, "");
+      if (codeOutput.trim() === testCase.output) {
         testCasesPassed += 1;
       }
     }
-
+    //testCasesPassed = 4;
+   //console.log(testCasesPassed)
     if (testCasesPassed === totalTestCases) {
       return res.status(200).json({
         status: "200",
         message: 'Code execution successful',
       });
     } else {
-      return res.status(200).json({
+      return res.status(400).json({
         status: "400",
         message: 'Code execution failed',
       });

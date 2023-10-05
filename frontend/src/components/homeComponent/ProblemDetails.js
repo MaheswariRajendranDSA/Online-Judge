@@ -17,11 +17,7 @@ const ProblemDetails = ({ problem }) => {
         <strong>Difficulty: </strong>
         {problem.difficulty}
       </div>
-      <div>
-        <strong>Languages: </strong>
-        {problem.languages &&
-          problem.languages.map((lang) => <p key={lang}>{lang}</p>)}
-      </div>
+      <br />
       <div>
       <button onClick={buttonHandler}>Practice and Win</button>
       <button onClick={testbuttonHandler}>Add a New TestCase</button>
