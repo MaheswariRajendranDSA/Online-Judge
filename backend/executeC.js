@@ -1,4 +1,4 @@
-const { execSync } = require("child_process");
+const { exec, execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -8,19 +8,22 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeC = (filepath, userInput) => {
-  return new Promise((resolve, reject) => {
-    const jobId = path.basename(filepath).split(".")[0];
-    const outPath = path.join(outputPath, `${jobId}.out`);
+const executeC = (filePath, inputTestCase) => {
+  const jobId = path.basename(filePath).split(".")[0];
+  const outPath = path.join(outputPath, `${jobId}.out`);
 
+  return new Promise((resolve, reject) => {
     try {
-        const result = execSync(`gcc ${filepath} -o ${outPath} && cd ${outputPath} && ${jobId}.out`, {
-        input: userInput,
-        encoding: "utf-8",
-      });
-      resolve(result.toString());
-    } catch (error) {
-      reject(error.stderr ? error.stderr.toString() : error.toString());
+      const output = execSync(
+        `gcc ${filePath} -o ${outPath} && cd ${outputPath} && ./${jobId}.out`,
+        { input: inputTestCase }
+      );
+      resolve(output.toString());
+    } catch (err) {
+      console.log(err);
+      reject(
+        "Code compilation (or) execution failed. Please check the code and try again"
+      );
     }
   });
 };
@@ -28,9 +31,3 @@ const executeC = (filepath, userInput) => {
 module.exports = {
   executeC,
 };
-
-
-
-
-
-

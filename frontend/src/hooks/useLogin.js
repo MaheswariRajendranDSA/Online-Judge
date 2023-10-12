@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 import  {useAuthContext} from './useAuthContext';
-
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
 export const useLogin  = () => {
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
@@ -10,10 +10,10 @@ export const useLogin  = () => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('/api/user/login', {
+    const response = await fetch('http://65.0.89.247:8000/api/user/login', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     })
     const json = await response.json()
 

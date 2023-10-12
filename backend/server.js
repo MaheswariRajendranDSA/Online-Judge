@@ -24,6 +24,9 @@ app.use((req, res, next) => {
 app.use('/api/problems', problemRoutes)
 app.use('/api/user', userRoutes)
 
+app.get('/',(req,res) => {
+  res.send("<h1>Hello from AWS</h1>")
+})
 //mongoose connect to database
 mongoose.connect(process.env.MONG_URI)
 .then(() => {

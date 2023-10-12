@@ -2,14 +2,14 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
 const Submit = (props) => {
   const { user } = useAuthContext();
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage ] = useState("");
+  const [language, setLanguage ] = useState("c");
   const { number } = useParams();
 
   function clearOutput() {
@@ -28,7 +28,7 @@ const Submit = (props) => {
     };
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/problems/createProblemById/run",
+        "http://65.0.89.247:8000/api/problems/createProblemById/run",
         payload,
         {
           headers: {
@@ -61,7 +61,7 @@ const Submit = (props) => {
       problemId: number,
     };
     try {
-      const response = await fetch(`/api/problems/submitproblem/${number}`, {
+      const response = await fetch(`http://65.0.89.247:8000/api/problems/submitproblem/${number}`, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
