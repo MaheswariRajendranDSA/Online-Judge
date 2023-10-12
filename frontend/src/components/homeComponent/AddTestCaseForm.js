@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useParams } from "react-router-dom"; // Import useParams for route parameters
-
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
 const AddTestCaseForm = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -28,7 +28,7 @@ const AddTestCaseForm = () => {
     };
 
     try {
-      const response = await fetch(`/api/problems/addTestCase/${number}`, {
+      const response = await fetch(`http://65.0.89.247:8000/api/problems/addTestCase/${number}`, {
         method: "POST",
         body: JSON.stringify(problems),
         headers: {

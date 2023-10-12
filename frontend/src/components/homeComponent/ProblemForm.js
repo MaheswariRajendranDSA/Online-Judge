@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
-
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
 const ProblemForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('')
@@ -22,12 +22,12 @@ const ProblemForm = () => {
     const test_cases = {input, output}
     const problem = {title, description, languages, difficulty, test_cases}
 
-    const response = await fetch('/api/problems/createNewProblemById/run', {
+    const response = await fetch('http://65.0.89.247:8000/api/problems/createNewProblemById/run', {
       method:'POST',
       body: JSON.stringify(problem),
       headers:{
         'Content-Type':'application/json',
-        'Authorization': `Bearer ${user.token}`
+        'Authorization': `Bearer ${user.token}`,
       }
     })
 

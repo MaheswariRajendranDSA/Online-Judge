@@ -1,4 +1,4 @@
-const { execSync } = require("child_process");
+const { exec, execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -8,20 +8,22 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filepath, userInput) => {
-  const jobId = path.basename(filepath).split(".")[0];
+const executeCpp = (filePath, inputTestCase) => {
+  const jobId = path.basename(filePath).split(".")[0];
   const outPath = path.join(outputPath, `${jobId}.out`);
 
- const child = execSync (
-      `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ${jobId}.out`,
-      { input:userInput },
-      (error, stdout, stderr) => {
-        error && reject({ error, stderr });
-        stderr && reject(stderr);
-      }
- );
-return child.toString();
- };
+  try {
+    const output = execSync(
+      `g++ ${filePath} -o ${outPath} && cd ${outputPath} && ./${jobId}.out`,
+      { input: inputTestCase }
+    );
+    return output.toString();
+  } catch (err) {
+    console.log(err);
+    return "Code compilation (or) execution failed. Please check the code and try again";
+  }
+};
+
 module.exports = {
   executeCpp,
 };
